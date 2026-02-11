@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LoveWish — Valentine Card</title>
+  <style>
+    :root{
+      --bg1:#070a12;
+      --bg2:#121a2c;
+      --card:rgba(255,255,255,.08);
+      --stroke:rgba(255,255,255,.14);
+      --text:#eef2ff;
+      --muted:rgba(238,242,255,.75);
+      --pink:#ff4d6d;
+      --gold:#ffd166;
+      --mint:#7cffb2;
+      --shadow:0 20px 70px rgba(0,0,0,.55);
+      --r:24px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(255,77,109,.22), transparent 55%),
+        radial-gradient(800px 520px at 85% 20%, rgba(124,255,178,.18), transparent 58%),
+        radial-gradient(1100px 700px at 50% 120%, rgba(255,209,102,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+
+    .app{
+      width:min(980px, 100%);
+      display:grid;
+      gap:14px;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      border-radius:16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.4px
+    }
+    .logo{
+      width:34px;height:34px;border-radius:12px;
+      background: conic-gradient(from 180deg, var(--pink), var(--gold), var(--mint), var(--pink));
+      box-shadow:0 10px 25px rgba(0,0,0,.35);
+      position:relative;
+    }
+    .logo:after{
+      content:"";
+      position:absolute;inset:8px;
+      border-radius:10px;
+      background:rgba(0,0,0,.25);
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    button{
+      border:none;cursor:pointer;
+      border-radius:14px;
+      padding:10px 12px;
+      font-weight:800;
+      color:var(--text);
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 10px 25px rgba(0,0,0,.25);
+      transition: transform .08s ease, background .2s ease;
+      touch-action: manipulation;
+    }
+    button:active{transform: translateY(1px) scale(.99)}
+    button.primary{
+      background: linear-gradient(135deg, rgba(255,77,109,.95), rgba(255,209,102,.85));
+      color:#0b0f17;
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+
+    @media (min-width: 880px){
+      .grid{grid-template-columns: 1.2fr .8fr;}
+    }
+
+    .card{
+      border-radius: var(--r);
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      min-height: 420px;
+    }
+
+    .cardHeader{
+      padding:18px 18px 12px;
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      backdrop-filter: blur(10px);
+    }
+
+    .title{
+      display:flex;flex-direction:column;gap:6px;
+      min-width:0;
+    }
+    .title h1{
+      margin:0;
+      font-size: clamp(22px, 3.7vw, 38px);
+      line-height:1.12;
+      letter-spacing:.2px;
+      word-break: break-word;
+    }
+    .title p{margin:0;color:var(--muted);font-size:14px}
+
+    .badge{
+      font-weight:900;
+      font-size:12px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.18);
+      white-space:nowrap;
+    }
+
+    .cardBody{
+      padding:18px;
+      position:relative;
+    }
+
+    .bigMsg{
+      font-size: clamp(15px, 2.25vw, 18px);
+      line-height:1.65;
+      color: rgba(238,242,255,.92);
+      margin: 0 0 14px;
+      white-space:pre-wrap;
+    }
+
+    .signature{
+      margin-top:10px;
+      font-weight:900;
+      opacity:.95;
+    }
+
+    .scene{
+      position:absolute; inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    canvas#fx{position:absolute; inset:0; width:100%; height:100%}
+
+    /* Side panel */
+    .panel{
+      border-radius: var(--r);
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.14);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .panel .head{
+      padding:14px 14px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.12);
+      backdrop-filter: blur(10px);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .panel .head b{letter-spacing:.2px}
+    .panel .body{padding:14px;display:grid;gap:12px}
+
+    label{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.2px}
+    input, textarea, select{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding:11px 12px;
+      outline:none;
+      font-size:14px;
+    }
+    textarea{min-height:96px;resize:vertical;line-height:1.4}
+    .row{display:grid;grid-template-columns:1fr;gap:10px}
+    @media (min-width:520px){
+      .row.two{grid-template-columns:1fr 1fr}
+    }
+
+    .help{
+      font-size:12px;color:rgba(238,242,255,.65);line-height:1.45
+    }
+
+    .tiny{
+      font-size:12px;color:rgba(238,242,255,.6);
+      display:flex;gap:8px;flex-wrap:wrap;align-items:center
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background: rgba(0,0,0,.55);
+      border:1px solid rgba(255,255,255,.14);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 50px rgba(0,0,0,.5);
+      display:none;
+      max-width:min(520px, 92vw);
+      text-align:center;
+      z-index: 50;
+    }
+    .toast.show{display:block}
+
+    .pulse{
+      display:inline-block;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.12)}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="app">
+      <div class="top">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            LoveWish <span style="opacity:.65;font-weight:800">— a shareable Valentine card</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button id="randomBtn">Random Quote ✨</button>
+          <button class="primary" id="shareBtn">Share Link 🔗</button>
+          <button id="copyBtn">Copy Text 📋</button>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Card -->
+        <div class="card" id="card">
+          <div class="scene">
+            <canvas id="fx"></canvas>
+          </div>
+
+          <div class="cardHeader">
+            <div class="title">
+              <h1 id="headline">Happy Valentine’s Day, <span class="pulse" id="toName">My Love</span> ❤️</h1>
+              <p id="subline">A tiny page with a big message.</p>
+            </div>
+            <div class="badge" id="themeBadge">Theme: Rose</div>
+          </div>
+
+          <div class="cardBody">
+            <p class="bigMsg" id="message">
+You’re my favorite place to be.
+Thank you for loving me in ways that feel like home.
+
+Today and always — it’s you. 💖
+            </p>
+
+            <div class="signature">— <span id="fromName">Someone who loves you</span></div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="panel">
+          <div class="head">
+            <b>Personalize</b>
+            <span class="tiny">Works on mobile + web • Everyone can use</span>
+          </div>
+          <div class="body">
+            <div class="row two">
+              <div>
+                <label>To</label>
+                <input id="toInput" placeholder="Loved one’s name" />
+              </div>
+              <div>
+                <label>From</label>
+                <input id="fromInput" placeholder="Your name" />
+              </div>
+            </div>
+
+            <div>
+              <label>Message</label>
+              <textarea id="msgInput" placeholder="Write your Valentine message..."></textarea>
+            </div>
+
+            <div class="row two">
+              <div>
+                <label>Theme</label>
+                <select id="themeSelect">
+                  <option value="rose">Rose</option>
+                  <option value="midnight">Midnight</option>
+                  <option value="sunset">Sunset</option>
+                  <option value="mint">Mint</option>
+                </select>
+              </div>
+              <div>
+                <label>Effect</label>
+                <select id="effectSelect">
+                  <option value="hearts">Floating Hearts</option>
+                  <option value="sparkles">Sparkles</option>
+                  <option value="confetti">Confetti</option>
+                  <option value="none">None</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row two">
+              <button class="primary" id="previewBtn">Apply & Preview 💝</button>
+              <button id="resetBtn">Reset</button>
+            </div>
+
+            <div class="help">
+              How it works: you customize the card, tap <b>Share Link</b>, and send it.
+              The link contains your message (encoded) so anyone can open it on any phone or laptop—no login.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tiny">
+        <span>Tip:</span>
+        <span>Save as <b>index.html</b> and host on GitHub Pages / Netlify / Vercel to share publicly.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ===============================
+    // LoveWish — Single-file "app"
+    // Shareable via query params
+    // Mobile-friendly, everyone can use
+    // ===============================
+
+    const $ = (id) => document.getElementById(id);
+
+    const ui = {
+      toName: $("toName"),
+      fromName: $("fromName"),
+      headline: $("headline"),
+      subline: $("subline"),
+      message: $("message"),
+      themeBadge: $("themeBadge"),
+
+      toInput: $("toInput"),
+      fromInput: $("fromInput"),
+      msgInput: $("msgInput"),
+      themeSelect: $("themeSelect"),
+      effectSelect: $("effectSelect"),
+
+      previewBtn: $("previewBtn"),
+      resetBtn: $("resetBtn"),
+      shareBtn: $("shareBtn"),
+      copyBtn: $("copyBtn"),
+      randomBtn: $("randomBtn"),
+
+      card: $("card"),
+      fx: $("fx"),
+      toast: $("toast"),
+    };
+
+    const QUOTES = [
+      "If I had to choose again, I’d still choose you. ❤️",
+      "You’re my favorite person and my safest place.",
+      "Every day feels better with you in it.",
+      "You + me = my happiest story.",
+      "I don’t need perfect — I just need you.",
+      "Home isn’t a place. It’s you.",
+      "I love you for all that you are, all that you’ve been, and all you’re becoming."
+    ];
+
+    // ---------- Toast ----------
+    function toast(msg){
+      ui.toast.textContent = msg;
+      ui.toast.classList.add("show");
+      clearTimeout(toast._t);
+      toast._t = setTimeout(()=>ui.toast.classList.remove("show"), 2200);
+    }
+
+    // ---------- Encode/Decode for share link ----------
+    // Keep it simple: encodeURIComponent
+    function buildShareURL(state){
+      const params = new URLSearchParams();
+      params.set("to", state.to);
+      params.set("from", state.from);
+      params.set("msg", state.msg);
+      params.set("theme", state.theme);
+      params.set("fx", state.fx);
+      const base = location.origin + location.pathname;
+      return base + "?" + params.toString();
+    }
+
+    function readStateFromURL(){
+      const p = new URLSearchParams(location.search);
+      return {
+        to: p.get("to") || "My Love",
+        from: p.get("from") || "Someone who loves you",
+        msg: p.get("msg") || "You’re my favorite place to be.\nThank you for loving me in ways that feel like home.\n\nToday and always — it’s you. 💖",
+        theme: p.get("theme") || "rose",
+        fx: p.get("fx") || "hearts",
+      };
+    }
+
+    function stateFromInputs(){
+      return {
+        to: ui.toInput.value.trim() || "My Love",
+        from: ui.fromInput.value.trim() || "Someone who loves you",
+        msg: ui.msgInput.value.trim() || "Happy Valentine’s Day 💖",
+        theme: ui.themeSelect.value,
+        fx: ui.effectSelect.value,
+      };
+    }
+
+    // ---------- Themes ----------
+    function applyTheme(theme){
+      const badgeNames = {rose:"Rose", midnight:"Midnight", sunset:"Sunset", mint:"Mint"};
+      ui.themeBadge.textContent = "Theme: " + (badgeNames[theme] || "Rose");
+
+      const root = document.documentElement;
+
+      if(theme === "rose"){
+        root.style.setProperty("--bg1", "#070a12");
+        root.style.setProperty("--bg2", "#121a2c");
+        root.style.setProperty("--pink", "#ff4d6d");
+        root.style.setProperty("--gold", "#ffd166");
+        root.style.setProperty("--mint", "#7cffb2");
+      } else if(theme === "midnight"){
+        root.style.setProperty("--bg1", "#050814");
+        root.style.setProperty("--bg2", "#0a1a2a");
+        root.style.setProperty("--pink", "#ff6b9a");
+        root.style.setProperty("--gold", "#bde0fe");
+        root.style.setProperty("--mint", "#a0c4ff");
+      } else if(theme === "sunset"){
+        root.style.setProperty("--bg1", "#12060f");
+        root.style.setProperty("--bg2", "#24111d");
+        root.style.setProperty("--pink", "#ff4d6d");
+        root.style.setProperty("--gold", "#ffd166");
+        root.style.setProperty("--mint", "#fca311");
+      } else if(theme === "mint"){
+        root.style.setProperty("--bg1", "#071210");
+        root.style.setProperty("--bg2", "#0f2a22");
+        root.style.setProperty("--pink", "#7cffb2");
+        root.style.setProperty("--gold", "#bde0fe");
+        root.style.setProperty("--mint", "#7cffb2");
+      }
+    }
+
+    // ---------- Apply content to card ----------
+    function applyState(state, replaceURL=false){
+      ui.toName.textContent = state.to;
+      ui.fromName.textContent = state.from;
+      ui.message.textContent = state.msg;
+
+      // inputs reflect state
+      ui.toInput.value = state.to;
+      ui.fromInput.value = state.from;
+      ui.msgInput.value = state.msg;
+      ui.themeSelect.value = state.theme;
+      ui.effectSelect.value = state.fx;
+
+      applyTheme(state.theme);
+      setEffect(state.fx);
+
+      if(replaceURL){
+        const url = buildShareURL(state);
+        history.replaceState(null, "", url);
+      }
+    }
+
+    // ---------- Copy text ----------
+    function cardText(){
+      const to = ui.toName.textContent;
+      const from = ui.fromName.textContent;
+      const msg = ui.message.textContent;
+      return `Happy Valentine’s Day, ${to} ❤️\n\n${msg}\n\n— ${from}`;
+    }
+
+    // ---------- Share link ----------
+    async function shareLink(){
+      const state = stateFromInputs();
+      const url = buildShareURL(state);
+      try{
+        if(navigator.share){
+          await navigator.share({title:"LoveWish", text:`Valentine card for ${state.to}`, url});
+          toast("Shared! 💝");
+        }else{
+          await navigator.clipboard.writeText(url);
+          toast("Link copied! 🔗");
+        }
+      }catch{
+        // fallback copy
+        try{
+          await navigator.clipboard.writeText(url);
+          toast("Link copied! 🔗");
+        }catch{
+          toast("Couldn’t share — copy the URL from address bar.");
+        }
+      }
+    }
+
+    async function copyText(){
+      try{
+        await navigator.clipboard.writeText(cardText());
+        toast("Card text copied! 📋");
+      }catch{
+        toast("Copy failed. Try manual copy.");
+      }
+    }
+
+    // ---------- FX canvas (hearts/sparkles/confetti) ----------
+    const fx = {
+      ctx: ui.fx.getContext("2d"),
+      w: 0, h: 0,
+      particles: [],
+      mode: "hearts",
+      raf: 0
+    };
+
+    function resizeFX(){
+      const rect = ui.card.getBoundingClientRect();
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      ui.fx.width = Math.floor(rect.width * dpr);
+      ui.fx.height = Math.floor(rect.height * dpr);
+      ui.fx.style.width = rect.width + "px";
+      ui.fx.style.height = rect.height + "px";
+      fx.w = ui.fx.width;
+      fx.h = ui.fx.height;
+      fx.ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+
+    function rand(min,max){ return min + Math.random()*(max-min); }
+    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+    function spawnParticle(mode){
+      const rect = ui.card.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+
+      const p = {
+        x: rand(0, w),
+        y: h + 20,
+        vx: rand(-0.25, 0.25),
+        vy: rand(-1.2, -0.6),
+        rot: rand(-0.15, 0.15),
+        a: rand(0.7, 1),
+        s: rand(12, 22),
+        life: rand(240, 420),
+        t: 0,
+        mode
+      };
+
+      if(mode === "confetti"){
+        p.y = rand(-20, 0);
+        p.vy = rand(0.6, 1.25);
+        p.vx = rand(-0.8, 0.8);
+        p.s = rand(6, 12);
+        p.rot = rand(-0.35, 0.35);
+      }
+
+      if(mode === "sparkles"){
+        p.y = rand(h*0.15, h*0.9);
+        p.vx = rand(-0.4, 0.4);
+        p.vy = rand(-0.2, 0.2);
+        p.s = rand(2, 4);
+        p.life = rand(120, 220);
+      }
+
+      fx.particles.push(p);
+    }
+
+    function drawHeart(ctx, x, y, size, alpha){
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.translate(x,y);
+      ctx.scale(size/24, size/24);
+      ctx.beginPath();
+      ctx.moveTo(0, -4);
+      ctx.bezierCurveTo(-10, -14, -24, -2, 0, 20);
+      ctx.bezierCurveTo(24, -2, 10, -14, 0, -4);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(255,77,109,1)";
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawConfetti(ctx, p){
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.t * p.rot);
+      ctx.fillStyle = pick(["rgba(255,77,109,1)","rgba(255,209,102,1)","rgba(124,255,178,1)","rgba(189,224,254,1)"]);
+      ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.65);
+      ctx.restore();
+    }
+
+    function drawSparkle(ctx, p){
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(255,209,102,1)";
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function loopFX(){
+      const rect = ui.card.getBoundingClientRect();
+      const ctx2 = fx.ctx;
+      const w = rect.width, h = rect.height;
+
+      ctx2.clearRect(0,0,w,h);
+
+      // spawn rate
+      if(fx.mode !== "none"){
+        const rate = fx.mode === "sparkles" ? 2 : 1;
+        for(let i=0;i<rate;i++){
+          if(Math.random() < 0.7) spawnParticle(fx.mode);
+        }
+      }
+
+      // update
+      fx.particles = fx.particles.filter(p => {
+        p.t += 1;
+        p.x += p.vx * 2.2;
+        p.y += p.vy * 2.2;
+
+        // fade
+        const k = 1 - (p.t / p.life);
+        p.a = Math.max(0, k);
+
+        // draw
+        if(p.mode === "hearts") drawHeart(ctx2, p.x, p.y, p.s, p.a);
+        else if(p.mode === "confetti") drawConfetti(ctx2, p);
+        else if(p.mode === "sparkles") drawSparkle(ctx2, p);
+
+        // keep if alive and in bounds
+        return p.t < p.life && p.a > 0.02 && p.x > -60 && p.x < w+60 && p.y > -80 && p.y < h+80;
+      });
+
+      fx.raf = requestAnimationFrame(loopFX);
+    }
+
+    function setEffect(mode){
+      fx.mode = mode;
+
+      // reset particles to avoid mixing effects
+      fx.particles = [];
+      // (re)start animation
+      if(!fx.raf) fx.raf = requestAnimationFrame(loopFX);
+    }
+
+    // ---------- Buttons ----------
+    ui.previewBtn.addEventListener("click", () => {
+      const state = stateFromInputs();
+      applyState(state, true);
+      toast("Updated! 💖");
+    });
+
+    ui.resetBtn.addEventListener("click", () => {
+      const state = {
+        to: "My Love",
+        from: "Someone who loves you",
+        msg: "You’re my favorite place to be.\nThank you for loving me in ways that feel like home.\n\nToday and always — it’s you. 💖",
+        theme: "rose",
+        fx: "hearts"
+      };
+      applyState(state, true);
+      toast("Reset done ✅");
+    });
+
+    ui.randomBtn.addEventListener("click", () => {
+      ui.msgInput.value = pick(QUOTES);
+      const state = stateFromInputs();
+      applyState(state, true);
+      toast("Random quote added ✨");
+    });
+
+    ui.shareBtn.addEventListener("click", shareLink);
+    ui.copyBtn.addEventListener("click", copyText);
+
+    // ---------- Init ----------
+    function init(){
+      const state = readStateFromURL();
+      applyState(state, false);
+      resizeFX();
+      window.addEventListener("resize", resizeFX);
+      window.addEventListener("orientationchange", () => setTimeout(resizeFX, 150));
+      // start animation
+      fx.raf = requestAnimationFrame(loopFX);
+    }
+
+    init();
+  </script>
+</body>
+</html>

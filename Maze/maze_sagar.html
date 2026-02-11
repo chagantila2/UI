@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>సాగర్ Maze</title>
+<style>
+html,body{margin:0;height:100%;background:#0b0f17;color:#fff;font-family:sans-serif;}
+.bar{padding:10px;background:#111;display:flex;gap:10px}
+button{padding:8px 12px;border:none;background:#222;color:white;border-radius:6px;cursor:pointer}
+canvas{display:block;margin:auto}
+</style>
+</head>
+<body>
+
+<div class="bar">
+<button onclick="generate()">Regenerate</button>
+<button onclick="toggleSolution()">Toggle Solution</button>
+</div>
+
+<canvas id="c"></canvas>
+
+<script>
+const CELL=14;
+const COLS=120;
+const ROWS=40;
+const BRAID=0.08;
+const THICK=2;
+
+const canvas=document.getElementById("c");
+const ctx=canvas.getContext("2d");
+
+let showSolution=false;
+
+function key(x,y){return x+","+y}
+function rnd(n){return Math.floor(Math.random()*n)}
+
+class Cell{
+constructor(x,y){
+this.x=x;this.y=y;
+this.w={N:true,E:true,S:true,W:true};
+this.v=false;
+}
+}
+
+function grid(){
+let g=[];
+for(let y=0;y<ROWS;y++){
+g[y]=[];
+for(let x=0;x<COLS;x++)g[y][x]=new Cell(x,y);
+}
+return g;
+}
+
+function neighbors(g,c){
+let r=[];
+let {x,y}=c;
+if(y>0)r.push(["N",g[y-1][x]]);
+if(x<COLS-1)r.push(["E",g[y][x+1]]);
+if(y<ROWS-1)r.push(["S",g[y+1][x]]);
+if(x>0)r.push(["W",g[y][x-1]]);
+return r;
+}
+
+function removeWall(a,b,d){
+if(d==="N"){a.w.N=false;b.w.S=false}
+if(d==="E"){a.w.E=false;b.w.W=false}
+if(d==="S"){a.w.S=false;b.w.N=false}
+if(d==="W"){a.w.W=false;b.w.E=false}
+}
+
+function carve(g){
+let stack=[];
+let s=g[rnd(ROWS)][rnd(COLS)];
+s.v=true;
+stack.push(s);
+while(stack.length){
+let c=stack[stack.length-1];
+let opts=neighbors(g,c).filter(n=>!n[1].v);
+if(!opts.length){stack.pop();continue;}
+let [d,n]=opts[rnd(opts.length)];
+removeWall(c,n,d);
+n.v=true;
+stack.push(n);
+}
+}
+
+function braid(g){
+for(let y=0;y<ROWS;y++)
+for(let x=0;x<COLS;x++){
+if(Math.random()>BRAID)continue;
+let c=g[y][x];
+let opts=neighbors(g,c).filter(n=>c.w[n[0]]);
+if(opts.length){
+let [d,n]=opts[rnd(opts.length)];
+removeWall(c,n,d);
+}
+}
+}
+
+// Telugu "సాగర్" path
+function buildTelugu(){
+let W=18,H=22,GAP=6;
+let startX=Math.floor((COLS-(5*W+4*GAP))/2);
+let startY=5;
+
+function off(lx,ly,i){return [startX+i*(W+GAP)+lx,startY+ly];}
+
+let letters=[
+ // స
+ [[2,2],[W-3,2],[W-3,8],[3,8],[3,14],[W-3,14]],
+ // ా extension curve
+ [[2,3],[2,18]],
+ // గ
+ [[W-4,2],[2,2],[2,H-4],[W-4,H-4],[W-4,12],[8,12]],
+ // ర
+ [[2,2],[2,H-4],[W-4,H-4],[W-4,10]],
+];
+
+let poly=[];
+letters.forEach((pts,i)=>{
+pts.forEach(p=>poly.push(off(p[0],p[1],i)));
+if(i<letters.length-1){
+let last=off(pts[pts.length-1][0],pts[pts.length-1][1],i);
+let next=off(letters[i+1][0][0],letters[i+1][0][1],i+1);
+poly.push([next[0],last[1]]);
+poly.push(next);
+}
+});
+return poly;
+}
+
+function lineCells(x0,y0,x1,y1){
+let cells=[];
+let dx=Math.abs(x1-x0),sx=x0<x1?1:-1;
+let dy=-Math.abs(y1-y0),sy=y0<y1?1:-1;
+let err=dx+dy;
+while(true){
+cells.push([x0,y0]);
+if(x0===x1&&y0===y1)break;
+let e2=2*err;
+if(e2>=dy){err+=dy;x0+=sx}
+if(e2<=dx){err+=dx;y0+=sy}
+}
+return cells;
+}
+
+function carveSolution(g,poly){
+let set=new Set();
+for(let i=0;i<poly.length-1;i++){
+let seg=lineCells(poly[i][0],poly[i][1],poly[i+1][0],poly[i+1][1]);
+for(let j=0;j<seg.length-1;j++){
+let [x,y]=seg[j];
+let [nx,ny]=seg[j+1];
+let a=g[y][x],b=g[ny][nx];
+if(nx===x+1)removeWall(a,b,"E");
+if(nx===x-1)removeWall(a,b,"W");
+if(ny===y+1)removeWall(a,b,"S");
+if(ny===y-1)removeWall(a,b,"N");
+set.add(key(x,y));
+}
+}
+return set;
+}
+
+function draw(g,sol){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+if(showSolution){
+ctx.fillStyle="rgba(255,215,0,0.25)";
+for(let k of sol){
+let [x,y]=k.split(",").map(Number);
+ctx.fillRect(x*CELL,y*CELL,CELL,CELL);
+}
+}
+ctx.strokeStyle="white";
+ctx.beginPath();
+for(let y=0;y<ROWS;y++)
+for(let x=0;x<COLS;x++){
+let c=g[y][x];
+let px=x*CELL,py=y*CELL;
+if(c.w.N){ctx.moveTo(px,py);ctx.lineTo(px+CELL,py)}
+if(c.w.E){ctx.moveTo(px+CELL,py);ctx.lineTo(px+CELL,py+CELL)}
+if(c.w.S){ctx.moveTo(px,py+CELL);ctx.lineTo(px+CELL,py+CELL)}
+if(c.w.W){ctx.moveTo(px,py);ctx.lineTo(px,py+CELL)}
+}
+ctx.stroke();
+}
+
+function generate(){
+canvas.width=COLS*CELL;
+canvas.height=ROWS*CELL;
+let g=grid();
+carve(g);
+braid(g);
+let poly=buildTelugu();
+let sol=carveSolution(g,poly);
+window.maze={g,sol};
+draw(g,sol);
+}
+
+function toggleSolution(){
+showSolution=!showSolution;
+draw(maze.g,maze.sol);
+}
+
+generate();
+</script>
+
+</body>
+</html>
