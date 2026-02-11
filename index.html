@@ -83,7 +83,10 @@
       position: relative;
       z-index: 2;
       /* above hearts */
-      width: min(820px, 94vw);
+        min-height: 300px;
+
+
+      width: min(600px, 92vw);
       border-radius: var(--r);
       border: 1px solid rgba(255, 255, 255, .55);
       background: var(--glass);
@@ -477,26 +480,31 @@
         const momentImg = document.getElementById("momentImg");
         const momentCaption = document.getElementById("momentCaption");
 
-        // const nextMomentBtn = document.getElementById("nextMomentBtn");
-        //const backToMsgBtn = document.getElementById("backToMsgBtn");
-
-        // ✅ Put your photo file names here (must match exactly)
         const MOMENTS = [
-          { src: "1.jpeg", caption: "Our first meet, first selfie 🥰" },
-          { src: "2.jpeg", caption: "That smile… my favorite view 😘" },
-          { src: "3.jpeg", caption: "A moment I’ll never forget 💖" },
+          { src: "15.jpeg", caption: "A moment I’ll never forget 💖" },
+          { src: "7.jpeg" },
+          { src: "5.jpeg" },
+          { src: "6.jpeg" },
+          { src: "16.jpeg" },
+
+          { src: "12.jpeg", caption: "Forever with you ❤️" },
           { src: "4.jpeg", caption: "Forever with you ❤️" },
-          { src: "5.jpeg", caption: "Our first meet, first selfie 🥰" },
-          { src: "6.jpeg", caption: "That smile… my favorite view 😘" },
-          { src: "7.jpeg", caption: "A moment I’ll never forget 💖" },
+
+          { src: "14.jpeg", caption: "Forever with you ❤️" },
+
           { src: "8.jpeg", caption: "Forever with you ❤️" },
+          { src: "1.jpeg", caption: "Our first meet, first selfie 🥰" },
+          { src: "13.jpeg", caption: "Forever with you ❤️" },
+
+          { src: "3.jpeg", caption: "A moment I’ll never forget 💖" },
+
+          { src: "2.jpeg", caption: "That smile… my favorite view 😘" },
+
+
           { src: "9.jpeg", caption: "Forever with you ❤️" },
           { src: "10.jpeg", caption: "Forever with you ❤️" },
-          { src: "11.jpeg", caption: "Forever with you ❤️" },
-          { src: "12.jpeg", caption: "Forever with you ❤️" },
-          { src: "13.jpeg", caption: "Forever with you ❤️" },
-          { src: "14.jpeg", caption: "Forever with you ❤️" }
 
+          { src: "11.jpeg", caption: "Forever with you ❤️" },
 
 
 
