@@ -3,22 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>LoveWish — Valentine Card</title>
+  <title>Will you be my Valentine?</title>
+
   <style>
     :root{
-      --bg1:#070a12;
-      --bg2:#121a2c;
-      --card:rgba(255,255,255,.08);
-      --stroke:rgba(255,255,255,.14);
-      --text:#eef2ff;
-      --muted:rgba(238,242,255,.75);
-      --pink:#ff4d6d;
-      --gold:#ffd166;
-      --mint:#7cffb2;
-      --shadow:0 20px 70px rgba(0,0,0,.55);
-      --r:24px;
+      --bg1:#ffb3c7;
+      --bg2:#cdb4ff;
+      --glass:rgba(255,255,255,.48);
+      --stroke:rgba(255,255,255,.70);
+      --text:#1f2430;
+      --muted:rgba(31,36,48,.70);
+      --yes:#22c55e;
+      --no:#ef4444;
+      --shadow:0 24px 70px rgba(0,0,0,.20);
+      --r:26px;
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -26,706 +25,529 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color:var(--text);
       background:
-        radial-gradient(900px 500px at 15% 10%, rgba(255,77,109,.22), transparent 55%),
-        radial-gradient(800px 520px at 85% 20%, rgba(124,255,178,.18), transparent 58%),
-        radial-gradient(1100px 700px at 50% 120%, rgba(255,209,102,.14), transparent 60%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-      overflow-x:hidden;
-    }
-
-    .wrap{
-      min-height:100%;
+        radial-gradient(900px 520px at 20% 15%, rgba(255,255,255,.65), transparent 55%),
+        radial-gradient(900px 520px at 80% 25%, rgba(255,255,255,.45), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
       display:grid;
       place-items:center;
       padding:18px;
+      overflow:hidden;
     }
 
-    .app{
-      width:min(980px, 100%);
-      display:grid;
-      gap:14px;
+    /* Full-page floating hearts layer */
+    .hearts-layer{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:1;
+    }
+    .heart-float{
+      position:absolute;
+      bottom:-40px;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 14px 24px rgba(0,0,0,.18));
+      animation: floatUp linear forwards;
+      opacity:0;
+      user-select:none;
+    }
+    @keyframes floatUp{
+      0%{ transform: translate3d(0,0,0) scale(.8) rotate(-8deg); opacity:0 }
+      10%{ opacity:.95 }
+      100%{ transform: translate3d(var(--dx), -120vh, 0) scale(1.25) rotate(18deg); opacity:0 }
     }
 
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:12px 14px;
-      border:1px solid var(--stroke);
-      background:rgba(0,0,0,.18);
-      border-radius:16px;
+    .card{
+      position:relative;
+      z-index:2; /* above hearts */
+      width:min(820px, 94vw);
+      border-radius:var(--r);
+      border:1px solid rgba(255,255,255,.55);
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      overflow:hidden;
       backdrop-filter: blur(10px);
     }
 
-    .brand{
-      display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.4px
+    .top{
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.55);
+      background: rgba(255,255,255,.22);
     }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:.2px}
     .logo{
-      width:34px;height:34px;border-radius:12px;
-      background: conic-gradient(from 180deg, var(--pink), var(--gold), var(--mint), var(--pink));
-      box-shadow:0 10px 25px rgba(0,0,0,.35);
+      width:34px;height:34px;border-radius:14px;
+      background: conic-gradient(from 180deg, #ff4d6d, #ffd166, #7cffb2, #ff4d6d);
+      box-shadow:0 12px 24px rgba(0,0,0,.12);
       position:relative;
     }
     .logo:after{
       content:"";
-      position:absolute;inset:8px;
-      border-radius:10px;
-      background:rgba(0,0,0,.25);
-      border:1px solid rgba(255,255,255,.12);
+      position:absolute;inset:8px;border-radius:12px;
+      background:rgba(255,255,255,.35);
+      border:1px solid rgba(255,255,255,.55);
     }
 
-    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    button{
-      border:none;cursor:pointer;
-      border-radius:14px;
+    input{
+      width:min(260px, 56vw);
       padding:10px 12px;
-      font-weight:800;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.65);
+      background: rgba(255,255,255,.45);
       color:var(--text);
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow:0 10px 25px rgba(0,0,0,.25);
-      transition: transform .08s ease, background .2s ease;
-      touch-action: manipulation;
-    }
-    button:active{transform: translateY(1px) scale(.99)}
-    button.primary{
-      background: linear-gradient(135deg, rgba(255,77,109,.95), rgba(255,209,102,.85));
-      color:#0b0f17;
-      border:1px solid rgba(255,255,255,.10);
+      outline:none;
+      font-weight:900;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:14px;
-    }
-
-    @media (min-width: 880px){
-      .grid{grid-template-columns: 1.2fr .8fr;}
-    }
-
-    .card{
-      border-radius: var(--r);
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    .body{
+      padding:26px 18px 24px;
+      text-align:center;
       position:relative;
-      min-height: 420px;
     }
 
-    .cardHeader{
-      padding:18px 18px 12px;
-      display:flex;
-      gap:14px;
-      align-items:flex-start;
-      justify-content:space-between;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.12);
-      backdrop-filter: blur(10px);
-    }
+    .questionView{display:block}
+    .successView{display:none}
 
     .title{
-      display:flex;flex-direction:column;gap:6px;
-      min-width:0;
-    }
-    .title h1{
-      margin:0;
-      font-size: clamp(22px, 3.7vw, 38px);
+      margin:12px 0 10px;
+      font-size: clamp(22px, 4vw, 40px);
       line-height:1.12;
-      letter-spacing:.2px;
-      word-break: break-word;
+      font-weight:1000;
     }
-    .title p{margin:0;color:var(--muted);font-size:14px}
-
-    .badge{
+    .sub{
+      margin:0 auto 14px;
+      max-width:52ch;
+      color:var(--muted);
       font-weight:900;
-      font-size:12px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.18);
-      white-space:nowrap;
+      line-height:1.5;
+      font-size: 14px;
     }
 
-    .cardBody{
-      padding:18px;
+    /* Photo (replaces cats) */
+    .photoWrap{
+      width:min(150px, 55vw);
+      margin: 0 auto 10px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.75);
+      background: rgba(255,255,255,.35);
+      box-shadow: 0 20px 60px rgba(0,0,0,.12);
+      overflow:hidden;
       position:relative;
+      transform: rotate(-1deg);
     }
-
-    .bigMsg{
-      font-size: clamp(15px, 2.25vw, 18px);
-      line-height:1.65;
-      color: rgba(238,242,255,.92);
-      margin: 0 0 14px;
-      white-space:pre-wrap;
-    }
-
-    .signature{
-      margin-top:10px;
-      font-weight:900;
-      opacity:.95;
-    }
-
-    .scene{
-      position:absolute; inset:0;
+    .photoWrap::after{
+      content:"";
+      position:absolute;inset:0;
+      background:
+        radial-gradient(600px 220px at 50% 0%, rgba(255,255,255,.55), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
       pointer-events:none;
-      overflow:hidden;
     }
-    canvas#fx{position:absolute; inset:0; width:100%; height:100%}
-
-    /* Side panel */
-    .panel{
-      border-radius: var(--r);
-      border:1px solid var(--stroke);
-      background: rgba(0,0,0,.14);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+    .photo{
+      width:100%;
+      height:auto;
+      display:block;
+      object-fit:cover;
     }
 
-    .panel .head{
-      padding:14px 14px 10px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.12);
-      backdrop-filter: blur(10px);
+    /* Buttons area */
+    .playground{
+      position:relative;
+      width:min(520px, 92vw);
+      height:160px;
+      margin:14px auto 0;
+      border-radius:22px;
+      border:1px dashed rgba(255,255,255,.75);
+      background: rgba(255,255,255,.18);
+      overflow:hidden;
+      touch-action: manipulation;
+    }
+    .btn{
+      position:absolute;
+      min-width:160px;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.65);
+      font-weight:1000;
+      cursor:pointer;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .08s ease;
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content:center;
       gap:10px;
+      letter-spacing:.2px;
+      box-shadow: 0 18px 30px rgba(0,0,0,.10);
     }
-    .panel .head b{letter-spacing:.2px}
-    .panel .body{padding:14px;display:grid;gap:12px}
+    .btn:active{transform: scale(.98)}
+    .btn.yes{background: rgba(34,197,94,.92); color:#05210f}
+    .btn.no{background: rgba(190, 113, 180, 0.92); color:#24060a}
 
-    label{font-size:12px;color:var(--muted);font-weight:800;letter-spacing:.2px}
-    input, textarea, select{
-      width:100%;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding:11px 12px;
-      outline:none;
-      font-size:14px;
+    .icon{
+      font-size:18px; line-height:1;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.12));
     }
-    textarea{min-height:96px;resize:vertical;line-height:1.4}
-    .row{display:grid;grid-template-columns:1fr;gap:10px}
-    @media (min-width:520px){
-      .row.two{grid-template-columns:1fr 1fr}
-    }
+    .icon.y{color:#b3001b}
+    .icon.n{color:#2b0a0e;opacity:.85}
 
-    .help{
-      font-size:12px;color:rgba(238,242,255,.65);line-height:1.45
+    .result{
+      margin-top:14px;
+      font-weight:1000;
+      color: rgba(31,36,48,.90);
+      min-height:24px;
     }
 
-    .tiny{
-      font-size:12px;color:rgba(238,242,255,.6);
-      display:flex;gap:8px;flex-wrap:wrap;align-items:center
-    }
-
-    .toast{
-      position:fixed;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      background: rgba(0,0,0,.55);
-      border:1px solid rgba(255,255,255,.14);
-      color: var(--text);
-      padding:10px 12px;
-      border-radius:14px;
+    /* Success screen */
+    .successCard{
+      width:min(560px, 92vw);
+      margin: 0 auto;
+      padding: 18px 14px 20px;
+      border-radius: 26px;
+      border:1px solid rgba(255,255,255,.75);
+      background: rgba(255,255,255,.50);
+      box-shadow: 0 20px 60px rgba(0,0,0,.12);
+      transform: rotate(-2deg);
       backdrop-filter: blur(10px);
-      box-shadow: 0 18px 50px rgba(0,0,0,.5);
-      display:none;
-      max-width:min(520px, 92vw);
-      text-align:center;
-      z-index: 50;
+      position:relative;
+      overflow:hidden;
     }
-    .toast.show{display:block}
+    .yay{
+      font-size: clamp(34px, 7vw, 60px);
+      font-weight: 1000;
+      color:#ff2d87;
+      letter-spacing:.6px;
+      margin: 10px 0 6px;
+      text-shadow: 0 10px 30px rgba(255,45,135,.25);
+    }
+    .happyLine{
+      margin: 6px 0 14px;
+      font-weight:1000;
+      color: rgba(31,36,48,.80);
+    }
+    .successActions{
+      display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px
+    }
+    .ghostBtn{
+      border:none;cursor:pointer;
+      padding:10px 12px;border-radius:14px;
+      background: rgba(255,255,255,.35);
+      border:1px solid rgba(255,255,255,.70);
+      font-weight:1000;
+      color:rgba(31,36,48,.85);
+    }
 
-    .pulse{
-      display:inline-block;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-    @keyframes pulse{
-      0%,100%{transform:scale(1)}
-      50%{transform:scale(1.12)}
-    }
+    /* Confetti */
+    canvas#fx{position:absolute;inset:0;pointer-events:none;z-index:3}
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="app">
-      <div class="top">
-        <div class="brand">
-          <div class="logo" aria-hidden="true"></div>
-          <div>
-            LoveWish <span style="opacity:.65;font-weight:800">— a shareable Valentine card</span>
-          </div>
+  <!-- Floating hearts across the whole page -->
+  <div class="hearts-layer" id="heartsLayer" aria-hidden="true"></div>
+
+  <div class="card" id="card">
+    <canvas id="fx"></canvas>
+
+    <div class="top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>Valentine Page</div>
+      </div>
+      <input id="nameInput" placeholder="Enter name (e.g., Sagar)" />
+    </div>
+
+    <div class="body">
+
+      <!-- QUESTION VIEW -->
+      <div class="questionView" id="questionView">
+        <!-- ✅ Replace cats with your photo -->
+        <!-- Put your image file in the SAME folder as this HTML and name it: couple.jpg -->
+        <div class="photoWrap">
+          <img class="photo" src="Couple1.jpeg" alt="Couple photo" />
         </div>
-        <div class="actions">
-          <button id="randomBtn">Random Quote ✨</button>
-          <button class="primary" id="shareBtn">Share Link 🔗</button>
-          <button id="copyBtn">Copy Text 📋</button>
+
+        <div class="title">Hello <span id="who">My Love</span>!<br/>Will you be my Valentine?</div>
+        <div class="sub">I bet you won’t choose <b>No</b> 💕 </div>
+
+        <div class="playground" id="playground">
+          <button class="btn yes" id="yesBtn" type="button"><span class="icon y">❤️</span> Yes</button>
+          <button class="btn no"  id="noBtn"  type="button"><span class="icon n">💔</span> No</button>
         </div>
+
+        <div class="result" id="result"></div>
       </div>
 
-      <div class="grid">
-        <!-- Card -->
-        <div class="card" id="card">
-          <div class="scene">
-            <canvas id="fx"></canvas>
+      <!-- SUCCESS VIEW -->
+      <div class="successView" id="successView">
+        <div class="successCard">
+          <div class="photoWrap" style="transform: rotate(-1deg); margin-top:6px;">
+            <img class="photo" src="couple.jpeg" alt="Couple photo" />
           </div>
 
-          <div class="cardHeader">
-            <div class="title">
-              <h1 id="headline">Happy Valentine’s Day, <span class="pulse" id="toName">My Love</span> ❤️</h1>
-              <p id="subline">A tiny page with a big message.</p>
-            </div>
-            <div class="badge" id="themeBadge">Theme: Rose</div>
-          </div>
+          <div class="yay">Yay! 💖</div>
+          <div class="happyLine"><span id="happyName">my love</span> will be so happy!</div>
 
-          <div class="cardBody">
-            <p class="bigMsg" id="message">
-You’re my favorite place to be.
-Thank you for loving me in ways that feel like home.
-
-Today and always — it’s you. 💖
-            </p>
-
-            <div class="signature">— <span id="fromName">Someone who loves you</span></div>
-          </div>
-        </div>
-
-        <!-- Controls -->
-        <div class="panel">
-          <div class="head">
-            <b>Personalize</b>
-            <span class="tiny">Works on mobile + web • Everyone can use</span>
-          </div>
-          <div class="body">
-            <div class="row two">
-              <div>
-                <label>To</label>
-                <input id="toInput" placeholder="Loved one’s name" />
-              </div>
-              <div>
-                <label>From</label>
-                <input id="fromInput" placeholder="Your name" />
-              </div>
-            </div>
-
-            <div>
-              <label>Message</label>
-              <textarea id="msgInput" placeholder="Write your Valentine message..."></textarea>
-            </div>
-
-            <div class="row two">
-              <div>
-                <label>Theme</label>
-                <select id="themeSelect">
-                  <option value="rose">Rose</option>
-                  <option value="midnight">Midnight</option>
-                  <option value="sunset">Sunset</option>
-                  <option value="mint">Mint</option>
-                </select>
-              </div>
-              <div>
-                <label>Effect</label>
-                <select id="effectSelect">
-                  <option value="hearts">Floating Hearts</option>
-                  <option value="sparkles">Sparkles</option>
-                  <option value="confetti">Confetti</option>
-                  <option value="none">None</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="row two">
-              <button class="primary" id="previewBtn">Apply & Preview 💝</button>
-              <button id="resetBtn">Reset</button>
-            </div>
-
-            <div class="help">
-              How it works: you customize the card, tap <b>Share Link</b>, and send it.
-              The link contains your message (encoded) so anyone can open it on any phone or laptop—no login.
-            </div>
+          <div class="successActions">
+            <button class="ghostBtn" id="againBtn">Ask Again 🔁</button>
+            <button class="ghostBtn" id="copyBtn">Copy Message 📋</button>
           </div>
         </div>
       </div>
 
-      <div class="tiny">
-        <span>Tip:</span>
-        <span>Save as <b>index.html</b> and host on GitHub Pages / Netlify / Vercel to share publicly.</span>
-      </div>
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
+<script>
+  // ========= IMPORTANT =========
+  // Save your uploaded picture as: "couple.jpg"
+  // Put couple.jpg in the SAME folder as this HTML file.
+  // Then it will show inside the card.
+  // =============================
 
-  <script>
-    // ===============================
-    // LoveWish — Single-file "app"
-    // Shareable via query params
-    // Mobile-friendly, everyone can use
-    // ===============================
+  // ----- Name personalization -----
+  const nameInput = document.getElementById("nameInput");
+  const who = document.getElementById("who");
+  const happyName = document.getElementById("happyName");
 
-    const $ = (id) => document.getElementById(id);
+  function currentName(){
+    const v = (nameInput.value || "").trim();
+    return v ? v : "My Love";
+  }
+  function syncName(){
+    const nm = currentName();
+    who.textContent = nm;
+    happyName.textContent = nm.toLowerCase();
+  }
+  nameInput.addEventListener("input", syncName);
+  syncName();
 
-    const ui = {
-      toName: $("toName"),
-      fromName: $("fromName"),
-      headline: $("headline"),
-      subline: $("subline"),
-      message: $("message"),
-      themeBadge: $("themeBadge"),
+  // ----- Views -----
+  const questionView = document.getElementById("questionView");
+  const successView  = document.getElementById("successView");
 
-      toInput: $("toInput"),
-      fromInput: $("fromInput"),
-      msgInput: $("msgInput"),
-      themeSelect: $("themeSelect"),
-      effectSelect: $("effectSelect"),
+  function showSuccess(){
+    questionView.style.display = "none";
+    successView.style.display  = "block";
+  }
+  function showQuestion(){
+    successView.style.display  = "none";
+    questionView.style.display = "block";
+    result.textContent = "";
+    layoutButtons();
+  }
 
-      previewBtn: $("previewBtn"),
-      resetBtn: $("resetBtn"),
-      shareBtn: $("shareBtn"),
-      copyBtn: $("copyBtn"),
-      randomBtn: $("randomBtn"),
+  // ----- No button moves away -----
+  const playground = document.getElementById("playground");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn  = document.getElementById("noBtn");
+  const result = document.getElementById("result");
 
-      card: $("card"),
-      fx: $("fx"),
-      toast: $("toast"),
-    };
+  function layoutButtons(){
+    const rect = playground.getBoundingClientRect();
+    yesBtn.style.left = (rect.width * 0.28 - yesBtn.offsetWidth/2) + "px";
+    yesBtn.style.top  = (rect.height * 0.62 - yesBtn.offsetHeight/2) + "px";
 
-    const QUOTES = [
-      "If I had to choose again, I’d still choose you. ❤️",
-      "You’re my favorite person and my safest place.",
-      "Every day feels better with you in it.",
-      "You + me = my happiest story.",
-      "I don’t need perfect — I just need you.",
-      "Home isn’t a place. It’s you.",
-      "I love you for all that you are, all that you’ve been, and all you’re becoming."
-    ];
+    noBtn.style.left  = (rect.width * 0.72 - noBtn.offsetWidth/2) + "px";
+    noBtn.style.top   = (rect.height * 0.62 - noBtn.offsetHeight/2) + "px";
+  }
 
-    // ---------- Toast ----------
-    function toast(msg){
-      ui.toast.textContent = msg;
-      ui.toast.classList.add("show");
-      clearTimeout(toast._t);
-      toast._t = setTimeout(()=>ui.toast.classList.remove("show"), 2200);
+  function moveNoAway(fromX, fromY){
+    const pr = playground.getBoundingClientRect();
+    const bw = noBtn.offsetWidth;
+    const bh = noBtn.offsetHeight;
+
+    const curX = parseFloat(noBtn.style.left || "0");
+    const curY = parseFloat(noBtn.style.top  || "0");
+
+    const dx = (curX + bw/2) - fromX;
+    const dy = (curY + bh/2) - fromY;
+
+    const len = Math.max(1, Math.hypot(dx,dy));
+    const ux = dx / len;
+    const uy = dy / len;
+
+    const jump = Math.max(70, Math.min(170, pr.width * 0.40));
+
+    let nx = (curX + ux * jump) + (Math.random()*34 - 17);
+    let ny = (curY + uy * jump) + (Math.random()*34 - 17);
+
+    nx = Math.max(8, Math.min(pr.width  - bw - 8, nx));
+    ny = Math.max(8, Math.min(pr.height - bh - 8, ny));
+
+    noBtn.style.left = nx + "px";
+    noBtn.style.top  = ny + "px";
+  }
+
+  noBtn.addEventListener("mouseenter", (e) => {
+    const pr = playground.getBoundingClientRect();
+    moveNoAway(e.clientX - pr.left, e.clientY - pr.top);
+  });
+
+  noBtn.addEventListener("pointerdown", (e) => {
+    e.preventDefault();
+    const pr = playground.getBoundingClientRect();
+    moveNoAway(e.clientX - pr.left, e.clientY - pr.top);
+    result.textContent = "Nice try 😄";
+  });
+
+  playground.addEventListener("pointermove", (e) => {
+    const pr = playground.getBoundingClientRect();
+    const x = e.clientX - pr.left;
+    const y = e.clientY - pr.top;
+
+    const nx = parseFloat(noBtn.style.left || "0");
+    const ny = parseFloat(noBtn.style.top  || "0");
+    const bw = noBtn.offsetWidth;
+    const bh = noBtn.offsetHeight;
+
+    const cx = nx + bw/2;
+    const cy = ny + bh/2;
+
+    if(Math.hypot(cx - x, cy - y) < 78){
+      moveNoAway(x,y);
     }
+  });
 
-    // ---------- Encode/Decode for share link ----------
-    // Keep it simple: encodeURIComponent
-    function buildShareURL(state){
-      const params = new URLSearchParams();
-      params.set("to", state.to);
-      params.set("from", state.from);
-      params.set("msg", state.msg);
-      params.set("theme", state.theme);
-      params.set("fx", state.fx);
-      const base = location.origin + location.pathname;
-      return base + "?" + params.toString();
+  yesBtn.addEventListener("click", () => {
+    syncName();
+    showSuccess();
+    burstConfetti();
+    boostHearts(1200); // more hearts after YES
+  });
+
+  document.getElementById("againBtn").addEventListener("click", showQuestion);
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    const nm = currentName();
+    const text = `Yay! 💖 ${nm} will be so happy!`;
+    try{
+      await navigator.clipboard.writeText(text);
+      alert("Copied ✅");
+    }catch{
+      alert("Copy failed. You can copy manually.");
     }
+  });
 
-    function readStateFromURL(){
-      const p = new URLSearchParams(location.search);
-      return {
-        to: p.get("to") || "My Love",
-        from: p.get("from") || "Someone who loves you",
-        msg: p.get("msg") || "You’re my favorite place to be.\nThank you for loving me in ways that feel like home.\n\nToday and always — it’s you. 💖",
-        theme: p.get("theme") || "rose",
-        fx: p.get("fx") || "hearts",
-      };
-    }
+  window.addEventListener("resize", layoutButtons);
+  setTimeout(layoutButtons, 0);
 
-    function stateFromInputs(){
-      return {
-        to: ui.toInput.value.trim() || "My Love",
-        from: ui.fromInput.value.trim() || "Someone who loves you",
-        msg: ui.msgInput.value.trim() || "Happy Valentine’s Day 💖",
-        theme: ui.themeSelect.value,
-        fx: ui.effectSelect.value,
-      };
-    }
+  // ----- Confetti FX -----
+  const fxCanvas = document.getElementById("fx");
+  const card = document.getElementById("card");
+  const fx = { ctx: fxCanvas.getContext("2d"), parts: [], raf: 0 };
 
-    // ---------- Themes ----------
-    function applyTheme(theme){
-      const badgeNames = {rose:"Rose", midnight:"Midnight", sunset:"Sunset", mint:"Mint"};
-      ui.themeBadge.textContent = "Theme: " + (badgeNames[theme] || "Rose");
+  function resizeFX(){
+    const r = card.getBoundingClientRect();
+    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    fxCanvas.width  = Math.floor(r.width * dpr);
+    fxCanvas.height = Math.floor(r.height * dpr);
+    fxCanvas.style.width = r.width + "px";
+    fxCanvas.style.height = r.height + "px";
+    fx.ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
 
-      const root = document.documentElement;
+  function rand(min,max){ return min + Math.random()*(max-min); }
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-      if(theme === "rose"){
-        root.style.setProperty("--bg1", "#070a12");
-        root.style.setProperty("--bg2", "#121a2c");
-        root.style.setProperty("--pink", "#ff4d6d");
-        root.style.setProperty("--gold", "#ffd166");
-        root.style.setProperty("--mint", "#7cffb2");
-      } else if(theme === "midnight"){
-        root.style.setProperty("--bg1", "#050814");
-        root.style.setProperty("--bg2", "#0a1a2a");
-        root.style.setProperty("--pink", "#ff6b9a");
-        root.style.setProperty("--gold", "#bde0fe");
-        root.style.setProperty("--mint", "#a0c4ff");
-      } else if(theme === "sunset"){
-        root.style.setProperty("--bg1", "#12060f");
-        root.style.setProperty("--bg2", "#24111d");
-        root.style.setProperty("--pink", "#ff4d6d");
-        root.style.setProperty("--gold", "#ffd166");
-        root.style.setProperty("--mint", "#fca311");
-      } else if(theme === "mint"){
-        root.style.setProperty("--bg1", "#071210");
-        root.style.setProperty("--bg2", "#0f2a22");
-        root.style.setProperty("--pink", "#7cffb2");
-        root.style.setProperty("--gold", "#bde0fe");
-        root.style.setProperty("--mint", "#7cffb2");
-      }
-    }
-
-    // ---------- Apply content to card ----------
-    function applyState(state, replaceURL=false){
-      ui.toName.textContent = state.to;
-      ui.fromName.textContent = state.from;
-      ui.message.textContent = state.msg;
-
-      // inputs reflect state
-      ui.toInput.value = state.to;
-      ui.fromInput.value = state.from;
-      ui.msgInput.value = state.msg;
-      ui.themeSelect.value = state.theme;
-      ui.effectSelect.value = state.fx;
-
-      applyTheme(state.theme);
-      setEffect(state.fx);
-
-      if(replaceURL){
-        const url = buildShareURL(state);
-        history.replaceState(null, "", url);
-      }
-    }
-
-    // ---------- Copy text ----------
-    function cardText(){
-      const to = ui.toName.textContent;
-      const from = ui.fromName.textContent;
-      const msg = ui.message.textContent;
-      return `Happy Valentine’s Day, ${to} ❤️\n\n${msg}\n\n— ${from}`;
-    }
-
-    // ---------- Share link ----------
-    async function shareLink(){
-      const state = stateFromInputs();
-      const url = buildShareURL(state);
-      try{
-        if(navigator.share){
-          await navigator.share({title:"LoveWish", text:`Valentine card for ${state.to}`, url});
-          toast("Shared! 💝");
-        }else{
-          await navigator.clipboard.writeText(url);
-          toast("Link copied! 🔗");
-        }
-      }catch{
-        // fallback copy
-        try{
-          await navigator.clipboard.writeText(url);
-          toast("Link copied! 🔗");
-        }catch{
-          toast("Couldn’t share — copy the URL from address bar.");
-        }
-      }
-    }
-
-    async function copyText(){
-      try{
-        await navigator.clipboard.writeText(cardText());
-        toast("Card text copied! 📋");
-      }catch{
-        toast("Copy failed. Try manual copy.");
-      }
-    }
-
-    // ---------- FX canvas (hearts/sparkles/confetti) ----------
-    const fx = {
-      ctx: ui.fx.getContext("2d"),
-      w: 0, h: 0,
-      particles: [],
-      mode: "hearts",
-      raf: 0
-    };
-
-    function resizeFX(){
-      const rect = ui.card.getBoundingClientRect();
-      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-      ui.fx.width = Math.floor(rect.width * dpr);
-      ui.fx.height = Math.floor(rect.height * dpr);
-      ui.fx.style.width = rect.width + "px";
-      ui.fx.style.height = rect.height + "px";
-      fx.w = ui.fx.width;
-      fx.h = ui.fx.height;
-      fx.ctx.setTransform(dpr,0,0,dpr,0,0);
-    }
-
-    function rand(min,max){ return min + Math.random()*(max-min); }
-    function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-
-    function spawnParticle(mode){
-      const rect = ui.card.getBoundingClientRect();
-      const w = rect.width, h = rect.height;
-
-      const p = {
-        x: rand(0, w),
-        y: h + 20,
-        vx: rand(-0.25, 0.25),
-        vy: rand(-1.2, -0.6),
-        rot: rand(-0.15, 0.15),
-        a: rand(0.7, 1),
-        s: rand(12, 22),
-        life: rand(240, 420),
-        t: 0,
-        mode
-      };
-
-      if(mode === "confetti"){
-        p.y = rand(-20, 0);
-        p.vy = rand(0.6, 1.25);
-        p.vx = rand(-0.8, 0.8);
-        p.s = rand(6, 12);
-        p.rot = rand(-0.35, 0.35);
-      }
-
-      if(mode === "sparkles"){
-        p.y = rand(h*0.15, h*0.9);
-        p.vx = rand(-0.4, 0.4);
-        p.vy = rand(-0.2, 0.2);
-        p.s = rand(2, 4);
-        p.life = rand(120, 220);
-      }
-
-      fx.particles.push(p);
-    }
-
-    function drawHeart(ctx, x, y, size, alpha){
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.translate(x,y);
-      ctx.scale(size/24, size/24);
-      ctx.beginPath();
-      ctx.moveTo(0, -4);
-      ctx.bezierCurveTo(-10, -14, -24, -2, 0, 20);
-      ctx.bezierCurveTo(24, -2, 10, -14, 0, -4);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(255,77,109,1)";
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function drawConfetti(ctx, p){
-      ctx.save();
-      ctx.globalAlpha = p.a;
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.t * p.rot);
-      ctx.fillStyle = pick(["rgba(255,77,109,1)","rgba(255,209,102,1)","rgba(124,255,178,1)","rgba(189,224,254,1)"]);
-      ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.65);
-      ctx.restore();
-    }
-
-    function drawSparkle(ctx, p){
-      ctx.save();
-      ctx.globalAlpha = p.a;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
-      ctx.fillStyle = "rgba(255,209,102,1)";
-      ctx.fill();
-      ctx.restore();
-    }
-
-    function loopFX(){
-      const rect = ui.card.getBoundingClientRect();
-      const ctx2 = fx.ctx;
-      const w = rect.width, h = rect.height;
-
-      ctx2.clearRect(0,0,w,h);
-
-      // spawn rate
-      if(fx.mode !== "none"){
-        const rate = fx.mode === "sparkles" ? 2 : 1;
-        for(let i=0;i<rate;i++){
-          if(Math.random() < 0.7) spawnParticle(fx.mode);
-        }
-      }
-
-      // update
-      fx.particles = fx.particles.filter(p => {
-        p.t += 1;
-        p.x += p.vx * 2.2;
-        p.y += p.vy * 2.2;
-
-        // fade
-        const k = 1 - (p.t / p.life);
-        p.a = Math.max(0, k);
-
-        // draw
-        if(p.mode === "hearts") drawHeart(ctx2, p.x, p.y, p.s, p.a);
-        else if(p.mode === "confetti") drawConfetti(ctx2, p);
-        else if(p.mode === "sparkles") drawSparkle(ctx2, p);
-
-        // keep if alive and in bounds
-        return p.t < p.life && p.a > 0.02 && p.x > -60 && p.x < w+60 && p.y > -80 && p.y < h+80;
+  function burstConfetti(){
+    resizeFX();
+    const r = card.getBoundingClientRect();
+    const colors = ["#ff4d6d","#ffd166","#7cffb2","#bde0fe","#ffffff","#ff2d87"];
+    for(let i=0;i<170;i++){
+      fx.parts.push({
+        x: r.width/2 + rand(-50,50),
+        y: r.height/2 + rand(-20,20),
+        vx: rand(-5.5,5.5),
+        vy: rand(-9,-2),
+        g: rand(0.12,0.22),
+        s: rand(5,11),
+        rot: rand(0,Math.PI),
+        vr: rand(-0.25,0.25),
+        a: 1,
+        c: pick(colors),
+        life: rand(70,130),
+        t: 0
       });
+    }
+    if(!fx.raf) fx.raf = requestAnimationFrame(loopFX);
+  }
 
+  function loopFX(){
+    resizeFX();
+    const ctx = fx.ctx;
+    const r = card.getBoundingClientRect();
+    ctx.clearRect(0,0,r.width,r.height);
+
+    fx.parts = fx.parts.filter(p => {
+      p.t++;
+      p.vy += p.g;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+      p.a = Math.max(0, 1 - p.t/p.life);
+
+      ctx.save();
+      ctx.globalAlpha = p.a;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s*0.7);
+      ctx.restore();
+
+      return p.t < p.life && p.y < r.height + 60 && p.a > 0.02;
+    });
+
+    if(fx.parts.length){
       fx.raf = requestAnimationFrame(loopFX);
+    }else{
+      cancelAnimationFrame(fx.raf);
+      fx.raf = 0;
     }
+  }
 
-    function setEffect(mode){
-      fx.mode = mode;
+  window.addEventListener("resize", resizeFX);
+  resizeFX();
 
-      // reset particles to avoid mixing effects
-      fx.particles = [];
-      // (re)start animation
-      if(!fx.raf) fx.raf = requestAnimationFrame(loopFX);
-    }
+  // ----- Floating hearts across the entire page -----
+  const heartsLayer = document.getElementById("heartsLayer");
+  const HEARTS = ["❤️","💖","💗","💘","💕","💞","💓"];
 
-    // ---------- Buttons ----------
-    ui.previewBtn.addEventListener("click", () => {
-      const state = stateFromInputs();
-      applyState(state, true);
-      toast("Updated! 💖");
-    });
+  function spawnHeart(intense=false){
+    const el = document.createElement("div");
+    el.className = "heart-float";
+    el.textContent = HEARTS[Math.floor(Math.random()*HEARTS.length)];
 
-    ui.resetBtn.addEventListener("click", () => {
-      const state = {
-        to: "My Love",
-        from: "Someone who loves you",
-        msg: "You’re my favorite place to be.\nThank you for loving me in ways that feel like home.\n\nToday and always — it’s you. 💖",
-        theme: "rose",
-        fx: "hearts"
-      };
-      applyState(state, true);
-      toast("Reset done ✅");
-    });
+    const size = intense ? rand(18, 34) : rand(14, 26);
+    const left = rand(-5, 105);
+    const dur  = intense ? rand(2.6, 4.2) : rand(4.0, 7.0);
+    const dx   = (rand(-1, 1) * rand(20, 160)).toFixed(0) + "px";
 
-    ui.randomBtn.addEventListener("click", () => {
-      ui.msgInput.value = pick(QUOTES);
-      const state = stateFromInputs();
-      applyState(state, true);
-      toast("Random quote added ✨");
-    });
+    el.style.left = left + "vw";
+    el.style.fontSize = size + "px";
+    el.style.animationDuration = dur + "s";
+    el.style.setProperty("--dx", dx);
 
-    ui.shareBtn.addEventListener("click", shareLink);
-    ui.copyBtn.addEventListener("click", copyText);
+    heartsLayer.appendChild(el);
+    // cleanup
+    setTimeout(() => el.remove(), dur * 1000 + 200);
+  }
 
-    // ---------- Init ----------
-    function init(){
-      const state = readStateFromURL();
-      applyState(state, false);
-      resizeFX();
-      window.addEventListener("resize", resizeFX);
-      window.addEventListener("orientationchange", () => setTimeout(resizeFX, 150));
-      // start animation
-      fx.raf = requestAnimationFrame(loopFX);
-    }
+  // ambient hearts
+  let ambientTimer = setInterval(() => spawnHeart(false), 220);
 
-    init();
-  </script>
+  // more hearts after YES
+  function boostHearts(ms){
+    const end = Date.now() + ms;
+    const t = setInterval(() => {
+      spawnHeart(true);
+      if(Date.now() > end) clearInterval(t);
+    }, 40);
+  }
+
+</script>
 </body>
 </html>
