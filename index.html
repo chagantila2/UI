@@ -609,10 +609,6 @@
             <button class="ghostBtn" id="nextBtnEnd" type="button">Next </button>
           </div>
 
-          <!--<div id="momentsWrap" style="display:none; margin-top:14px;">
-            <img id="momentImg" src="" alt="Moment"
-              style="width:min(120px, 90vw); border-radius:18px; box-shadow:0 18px 40px rgba(0,0,0,.16);">
-          </div>-->
         </div>
       </div>
 
@@ -761,9 +757,8 @@ You are my happiness, my peace, and my greatest blessing.
           const text = el.getAttribute("data-text") || "";
 
           revealLines(el, text, 650);
-          startPetals(5000); // 🌹 flowers for 5 seconds
+          startPetals(5000); 
 
-          //  typeWrite(el, text, 9); // speed: lower = faster
         });
         function revealLines(el, text, lineDelay = 650) {
           el.innerHTML = "";
@@ -806,7 +801,7 @@ You are my happiness, my peace, and my greatest blessing.
           }
         });
 
-
+/**
         function typeWrite(el, text, speed = 22) {
           el.textContent = "";
           let i = 0;
@@ -824,7 +819,7 @@ You are my happiness, my peace, and my greatest blessing.
               setTimeout(() => el.classList.remove("typewriter"), 700);
             }
           }, speed);
-        }
+        }*/
 
         const nameInput = document.getElementById("nameInput");
         const who = document.getElementById("who");
