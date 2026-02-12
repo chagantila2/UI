@@ -82,11 +82,10 @@
     .card {
       position: relative;
       z-index: 2;
-      /* above hearts */
-      min-height: 300px;
-
-
-      width: min(600px, 92vw);
+      min-height: 260px;
+      /* smaller */
+      width: min(460px, 90vw);
+      /* was 600px */
       border-radius: var(--r);
       border: 1px solid rgba(255, 255, 255, .55);
       background: var(--glass);
@@ -94,6 +93,7 @@
       overflow: hidden;
       backdrop-filter: blur(10px);
     }
+
 
     .top {
       padding: 14px 16px;
@@ -142,11 +142,32 @@
       font-weight: 900;
     }
 
+    .top {
+      padding: 10px 12px;
+      /* smaller */
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 12px;
+    }
+
+    input {
+      width: min(220px, 52vw);
+      /* smaller */
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-weight: 800;
+    }
+
     .body {
-      padding: 26px 18px 24px;
+      padding: 18px 14px 18px;
+      /* was 26px 18px 24px */
       text-align: center;
       position: relative;
     }
+
 
     .questionView {
       display: block
@@ -172,11 +193,10 @@
       font-size: 14px;
     }
 
-    /* Photo (replaces cats) */
     .photoWrap {
-      width: min(150px, 55vw);
-      margin: 0 auto 10px;
-      border-radius: 24px;
+      width: min(120px, 46vw);
+      margin: 0 auto 8px;
+      border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, .75);
       background: rgba(255, 255, 255, .35);
       box-shadow: 0 20px 60px rgba(0, 0, 0, .12);
@@ -205,8 +225,8 @@
     /* Buttons area */
     .playground {
       position: relative;
-      width: min(520px, 92vw);
-      height: 160px;
+      width: min(420px, 90vw);
+      height: 130px;
       margin: 14px auto 0;
       border-radius: 22px;
       border: 1px dashed rgba(255, 255, 255, .75);
@@ -272,14 +292,14 @@
 
     /* Success screen */
     .successCard {
-      width: min(560px, 92vw);
+      width: min(380px, 80vw);
       margin: 0 auto;
-      padding: 18px 14px 20px;
-      border-radius: 26px;
+      padding: 14px 12px 16px;
+      border-radius: 22px;
       border: 1px solid rgba(255, 255, 255, .75);
       background: rgba(170, 232, 56, 0.5);
       box-shadow: 0 20px 60px rgba(0, 0, 0, .12);
-      transform: rotate(-2deg);
+      transform: rotate(-1deg);
       backdrop-filter: blur(10px);
       position: relative;
       overflow: hidden;
@@ -352,10 +372,10 @@
     }
 
     .momentCard {
-      width: min(560px, 92vw);
+      width: min(360px, 80vw);
       margin: 0 auto;
-      padding: 18px 14px 16px;
-      border-radius: 26px;
+      padding: 14px 12px 14px;
+      border-radius: 18px;
       border: 1px solid rgba(255, 255, 255, .75);
       background: rgba(255, 255, 255, .55);
       box-shadow: 0 20px 60px rgba(0, 0, 0, .12);
@@ -370,7 +390,7 @@
     }
 
     .momentCard img {
-      width: min(360px, 80%);
+      width: min(300px, 78%);
       /* ✅ control size */
       height: auto;
       display: block;
@@ -386,6 +406,132 @@
       color: rgba(31, 36, 48, .80);
       font-size: 16px;
     }
+
+    .letterView {
+      margin-top: 14px;
+    }
+
+    .letterCard {
+      width: min(320px, 70vw);
+      margin: 0 auto;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .78);
+      border: 1px solid rgba(255, 255, 255, .85);
+      box-shadow: 0 22px 70px rgba(0, 0, 0, .14);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes lineFade {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+
+    .letterTopIcons {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      font-size: 34px;
+      margin: 4px 0 6px;
+    }
+
+    .letterLine {
+      margin: 0 0 6px;
+      font-style: italic;
+      opacity: 0;
+      transform: translateY(5px);
+      animation: lineFade .5s ease forwards;
+    }
+
+
+    .letterHeading {
+      font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+      font-style: italic;
+
+      font-size: 26px;
+      font-weight: 800;
+      color: rgba(31, 36, 48, .92);
+      margin: 6px 0 12px;
+    }
+
+    .letterBody {
+      font-family: "Comic Sans MS", "Bradley Hand", "Segoe Script", "Apple Chancery", cursive;
+      font-size: 15px;
+      font-weight: 700;
+      color: rgba(31, 36, 48, .78);
+      line-height: 1.2;
+      padding: 6px 10px 4px;
+    }
+
+    .letterActions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .typewriter {
+      white-space: pre-wrap;
+      /* respects \n line breaks */
+      position: relative;
+    }
+
+    /* blinking caret */
+    .typewriter::after {
+      content: "▍";
+      display: inline-block;
+      margin-left: 2px;
+      animation: caretBlink .9s steps(1) infinite;
+      opacity: .9;
+    }
+
+    @keyframes caretBlink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .petal-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .petal {
+      position: absolute;
+      top: -40px;
+      font-size: 24px;
+      opacity: 0;
+      animation: fallPetal linear forwards;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, .25));
+    }
+
+    @keyframes fallPetal {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+
 
 
     /* Confetti */
@@ -408,17 +554,17 @@
     <div class="top">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
-        <div>My Lifetime Valentine</div>
+        <div>Our Story</div>
       </div>
-      <input id="nameInput" />
+      <input id="nameInput" placeholder="Enter name" />
     </div>
 
     <div class="body">
 
+      <div class="petal-layer" id="petalLayer"></div>
+
       <!-- QUESTION VIEW -->
       <div class="questionView" id="questionView">
-        <!-- ✅ Replace cats with your photo -->
-        <!-- Put your image file in the SAME folder as this HTML and name it: couple.jpg -->
         <div class="photoWrap">
           <img class="photo" src="Couple1.jpeg" alt="Couple photo" />
         </div>
@@ -459,8 +605,8 @@
             <div class="momentCaption" id="momentCaption"></div>
           </div>
 
-          <div class="successActions">
-
+          <div class="successActions" id="momentsEndActions" style="display:none;">
+            <button class="ghostBtn" id="nextBtnEnd" type="button">Next </button>
           </div>
 
           <!--<div id="momentsWrap" style="display:none; margin-top:14px;">
@@ -470,12 +616,39 @@
         </div>
       </div>
 
+      <!-- LOVE LETTER VIEW -->
+      <div class="letterView" id="letterView" style="display:none;">
+        <div class="letterCard">
+          <div class="letterTopIcons">
+            <span class="letterEmoji">✉️</span>
+            <span class="letterEmoji">🌹</span>
+          </div>
+
+          <div class="letterHeading">My Love Letter</div>
+
+          <div class="letterBody typewriter " id="letterBody" data-text="From the day you came into my life, everything became more beautiful.
+You are my happiness, my peace, and my greatest blessing.
+
+  Thanks for loving me every day — even with my crazy mood swings 😄
+      I love you forever 🥰❤️"> </div>
+
+          <div class=" letterActions">`
+            <!--  <button class="ghostBtn" id="backToSuccessBtn" type="button"> Back</button>-->
+            <button class="ghostBtn" id="copyLetterBtn" type="button">Copy 📋</button>
+          </div>
+        </div>
+      </div>
+
+
       <script>
 
         // ---- Moments slideshow (reel style) ----
         const momentsBtn = document.getElementById("momentsBtn");
         const momentsView = document.getElementById("momentsView");
         const successCard = document.getElementById("successCard");
+        const momentsEndActions = document.getElementById("momentsEndActions");
+        const nextBtnEnd = document.getElementById("nextBtnEnd");
+
 
         const momentImg = document.getElementById("momentImg");
         const momentCaption = document.getElementById("momentCaption");
@@ -528,6 +701,7 @@
         momentsBtn.addEventListener("click", () => {
           successCard.style.display = "none";
           momentsView.style.display = "block";
+          momentsEndActions.style.display = "none"; // ✅ hide at start
 
           mIndex = 0;
           renderMoment(mIndex);
@@ -539,6 +713,8 @@
             if (mIndex >= MOMENTS.length) {
               clearInterval(momentTimer);
               momentTimer = null;
+              momentsEndActions.style.display = "flex"; // ✅ show only at end
+
               return;
             }
             renderMoment(mIndex);
@@ -546,7 +722,110 @@
         });
 
 
-        // ----- Name personalization -----
+        const petalLayer = document.getElementById("petalLayer");
+        const PETALS = ["🌹", "🌺", "🌸"];
+
+        function spawnPetal() {
+          const el = document.createElement("div");
+          el.className = "petal";
+          el.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
+
+          const left = Math.random() * 100;
+          const size = 20 + Math.random() * 18;
+          const duration = 4 + Math.random() * 3;
+
+          el.style.left = left + "vw";
+          el.style.fontSize = size + "px";
+          el.style.animationDuration = duration + "s";
+
+          petalLayer.appendChild(el);
+
+          setTimeout(() => el.remove(), duration * 1000);
+        }
+
+        function startPetals(durationMs = 4000) {
+          const end = Date.now() + durationMs;
+
+          const interval = setInterval(() => {
+            spawnPetal();
+            if (Date.now() > end) clearInterval(interval);
+          }, 120);
+        }
+
+        nextBtnEnd.addEventListener("click", () => {
+          momentsView.style.display = "none";
+          momentsEndActions.style.display = "none";
+          letterView.style.display = "block";
+
+          const el = document.getElementById("letterBody");
+          const text = el.getAttribute("data-text") || "";
+
+          revealLines(el, text, 650);
+          startPetals(5000); // 🌹 flowers for 5 seconds
+
+          //  typeWrite(el, text, 9); // speed: lower = faster
+        });
+        function revealLines(el, text, lineDelay = 650) {
+          el.innerHTML = "";
+
+          const lines = (text || "").split("\n");
+          let i = 0;
+
+          const timer = setInterval(() => {
+            if (i >= lines.length) {
+              clearInterval(timer);
+              return;
+            }
+
+            const line = lines[i];
+
+            // blank line spacer
+            if (line.trim() === "") {
+              const spacer = document.createElement("div");
+              spacer.style.height = "12px";
+              el.appendChild(spacer);
+            } else {
+              const p = document.createElement("p");
+              p.className = "letterLine";
+              p.textContent = line;
+              el.appendChild(p);
+            }
+
+            i++;
+          }, lineDelay);
+        }
+
+
+        copyLetterBtn.addEventListener("click", async () => {
+          const text = document.getElementById("letterBody").innerText;
+          try {
+            await navigator.clipboard.writeText(text);
+            alert("Copied ✅");
+          } catch {
+            alert("Copy failed. Please copy manually.");
+          }
+        });
+
+
+        function typeWrite(el, text, speed = 22) {
+          el.textContent = "";
+          let i = 0;
+
+          // show caret only while typing
+          el.classList.add("typewriter");
+
+          const timer = setInterval(() => {
+            el.textContent += text.charAt(i);
+            i++;
+
+            if (i >= text.length) {
+              clearInterval(timer);
+              // stop caret after done (optional)
+              setTimeout(() => el.classList.remove("typewriter"), 700);
+            }
+          }, speed);
+        }
+
         const nameInput = document.getElementById("nameInput");
         const who = document.getElementById("who");
         const happyName = document.getElementById("happyName");
