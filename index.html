@@ -606,7 +606,7 @@
           </div>
 
           <div class="successActions" id="momentsEndActions" style="display:none;">
-            <button class="ghostBtn" id="nextBtnEnd" type="button">Next </button>
+            <button class="ghostBtn" id="nextBtnEnd" type="button">Click Next </button>
           </div>
 
         </div>
@@ -625,7 +625,7 @@
           <div class="letterBody typewriter " id="letterBody" data-text="From the day you came into my life, everything became more beautiful.
 You are my happiness, my peace, and my greatest blessing.
 
-  Thanks for loving me every day — even with my crazy mood swings 😄
+  Thanks for loving me every day even with my crazy mood swings 😄
       I love you forever 🥰❤️"> </div>
 
           <div class=" letterActions">`
@@ -675,6 +675,8 @@ You are my happiness, my peace, and my greatest blessing.
           { src: "10.jpeg", caption: "Forever with you ❤️" },
 
           { src: "11.jpeg", caption: "Forever with you ❤️" },
+          { src: "17.jpeg", caption: "Forever with you ❤️" }
+
 
 
 
@@ -757,7 +759,7 @@ You are my happiness, my peace, and my greatest blessing.
           const text = el.getAttribute("data-text") || "";
 
           revealLines(el, text, 650);
-          startPetals(5000); 
+          startPetals(5000);
 
         });
         function revealLines(el, text, lineDelay = 650) {
@@ -801,25 +803,25 @@ You are my happiness, my peace, and my greatest blessing.
           }
         });
 
-/**
-        function typeWrite(el, text, speed = 22) {
-          el.textContent = "";
-          let i = 0;
-
-          // show caret only while typing
-          el.classList.add("typewriter");
-
-          const timer = setInterval(() => {
-            el.textContent += text.charAt(i);
-            i++;
-
-            if (i >= text.length) {
-              clearInterval(timer);
-              // stop caret after done (optional)
-              setTimeout(() => el.classList.remove("typewriter"), 700);
-            }
-          }, speed);
-        }*/
+        /**
+                function typeWrite(el, text, speed = 22) {
+                  el.textContent = "";
+                  let i = 0;
+        
+                  // show caret only while typing
+                  el.classList.add("typewriter");
+        
+                  const timer = setInterval(() => {
+                    el.textContent += text.charAt(i);
+                    i++;
+        
+                    if (i >= text.length) {
+                      clearInterval(timer);
+                      // stop caret after done (optional)
+                      setTimeout(() => el.classList.remove("typewriter"), 700);
+                    }
+                  }, speed);
+                }*/
 
         const nameInput = document.getElementById("nameInput");
         const who = document.getElementById("who");
